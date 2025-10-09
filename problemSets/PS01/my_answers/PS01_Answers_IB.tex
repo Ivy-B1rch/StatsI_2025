@@ -87,9 +87,48 @@ A school counselor was curious about the average of IQ of the students in her sc
 \begin{enumerate}
 	\item Find a 90\% confidence interval for the average student IQ in the school.\\
 	
+	demeanedSum <- y-mean(y)
+	n = length(y)
+	#heres the big ugly formula to figure out Standard Deviation
+	SD <- sqrt((sum(demeanedSum^2))/ (n-1))
+	
+	
+	estimatedPopDeviation <- SD/sqrt(n) #estimate population deviation using sample deviation
+	#We CANT use Qnorm because N < 30 so we're gonna be using t scores instead  
+	
+	tscore = qt((1-.9)/2, n-1) 
+	
+	#making the answer as a vector
+	CI <- c(mean(y)+tscore*estimatedPopDeviation, mean(y)-tscore*estimatedPopDeviation)
+	
+	\textbf{Answer}: [93.95993,102.92007]
+	
 	\item Next, the school counselor was curious  whether  the average student IQ in her school is higher than the average IQ score (100) among all the schools in the country.\\ 
 	
 	\noindent Using the same sample, conduct the appropriate hypothesis test with $\alpha=0.05$.
+	
+	
+	#is the average >100? That's a one sided test. Null hypothesis: yMean =< 100
+	# lets start with our t statistic
+	
+	# alpha = .05 and we're looking at if the value is "lower", so we're gonna use a Coefficent of .95. Our t score is 
+	tscore <- qt((1-.95)/2, n)
+	
+	#our N_0 is 100
+	#test statistic, using the estimatedPopDeviation we figured out earlier
+	TestStat <- (mean(y)-100)/estimatedPopDeviation
+	
+	TestStat
+	
+	# pvalue = the probability of the test statistic being <100
+	#only getting one tail and not multiplying by 2 because its a single sided table
+	pvalue = pt(abs(TestStat), df = n-1, lower.tail = F)
+	
+	pvalue
+	
+	#cannot reject the null hypothesis, p value too large to be statistically significant 
+	
+		\textbf{Answer:}  We cannot rule out the null hypothesis that the average student IQ in her school is lower than the average IQ score among all the schools in the country, with P Value of aproximately .278.
 \end{enumerate}
 
 \newpage
@@ -118,12 +157,60 @@ A school counselor was curious about the average of IQ of the students in her sc
 
 \item
 Please plot the relationships among \emph{Y}, \emph{X1}, \emph{X2}, and \emph{X3}? What are the correlations among them (you just need to describe the graph and the relationships among them)?
+
+
+plot(expenditure$X1, expenditure$Y)
+#possible weak positive correlation
+
+plot(expenditure$X2, expenditure$Y)
+#possible weak positive correlation
+
+plot(expenditure$X3, expenditure$Y)
+#possible weak positive correlation
+
+plot(expenditure$X1, expenditure$X2)
+#possible positive correlation, hard to say just by looking
+
+plot(expenditure$X1, expenditure$X3)
+#possible weak positive correlation
+
+plot(expenditure$X2, expenditure$X3)
+#no clear correlation, hard to say
+
+
+\textbf{Answer: }Almost combinations of variables seem to have a possible positive weak correlation, although X1 and X2 are very distributed and I might just be pattern matching unreasonably. The big exception was X2 and X3, which seem to have no correlation between them.
+
 \vspace{.5cm}
 \item
 Please plot the relationship between \emph{Y} and \emph{Region}? On average, which region has the highest per capita expenditure on housing assistance?
 \vspace{.5cm}
+
+plot(expenditure$Region, expenditure$Y)
+
+\textbf{Answer}: Region 1, the North-East, has the highest per capita expenditure.
+
 \item
 Please plot the relationship between \emph{Y} and \emph{X1}? Describe this graph and the relationship. Reproduce the above graph including one more variable \emph{Region} and display different regions with different types of symbols and colors.
+
+png(file="fileplot.png")
+
+plot(expenditure$X1, expenditure$Y, 
+col = expenditure$Region, 
+pch = expenditure$Region,
+xlab = "Per capita personal income",
+ylab = "Per capita expenditure on shelters/housing assistance")
+#There is a vague positive correlation, with the majority of the sample clustered around the "middle"
+
+legend(950, 130, # x and y position of legend
+legend=c("Northeast","North Central", "South","West"),
+col=c(1,2,3,4),
+pch=c(1,2,3,4))
+dev.off()
+
+\textbf{Answer}: Y and X1 have a vague positive correlation, with the majority of the sample clustered around the "middle" of the graph. Introducing a legend showing regions shows that the South represents most of the bottom left, while the majority of the outliers in the top right belong to the Northeast.
+
+
+\includegraphics{fileplot.png}
 \end{itemize}
 
 
