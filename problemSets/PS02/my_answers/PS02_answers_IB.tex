@@ -98,13 +98,53 @@
 	\item [(a)]
 	Calculate the $\chi^2$ test statistic by hand/manually (even better if you can do "by hand" in \texttt{R}).\\
 	\vspace{7cm}
+	#like all good computer scientists i do my best to never do anything in my head ever
+	NSTotal <- sum(14,7) #column 1 total
+	BRTotal <- sum(6,7) #column 2 total
+	STotal <- sum(7,1) #column 3 total
+	UCTotal <-sum(14,6,7) #row 1 total
+	LCTotal <-sum(7,7,1) #row 2 total
+	
+	grandtotal <- sum(UCTotal,LCTotal)
+	
+	#set up frequencies
+	f1e <-(NSTotal/grandtotal)*UCTotal
+	f2e <- (BRTotal/grandtotal)*UCTotal
+	f3e <- (STotal/grandtotal)*UCTotal
+	f4e <- (NSTotal/grandtotal)*LCTotal
+	f5e <- (BRTotal/grandtotal)*LCTotal
+	f6e <- (STotal/grandtotal)*LCTotal
+	
+	#sum together observed frequency minus estimated frequency squared divided by estimated frequency 
+	chisquare <- sum(((14-f1e)^2)/f1e, 
+	((6-f2e)^2)/f2e, 
+	((7-f3e)^2)/f3e, 
+	((7-f4e)^2)/f4e, 
+	((7-f5e)^2)/f5e,
+	((1-f4e)^2)/f6e
+	)
+	chisquare
+	
+	The Chisquare is 17.37153
 	
 	\item [(b)]
 	Now calculate the p-value from the test statistic you just created (in \texttt{R}).\footnote{Remember frequency should be $>$ 5 for all cells, but let's calculate the p-value here anyway.}  What do you conclude if $\alpha = 0.1$?\\
 	
+	pvalue <- pchisq(chisquare,3,lower.tail= FALSE)
+	pvalue
+	
+	The P Value is 0.0005926672. if Alpha is 0.1, we can reject the null hypothesis due to the P value being below the Alpha 
 	\newpage
 	\item [(c)] Calculate the standardized residuals for each cell and put them in the table below.
 	\vspace{1cm}
+	
+	z1 <- ((14-f1e)^2)/sqrt(f1e*(1-NSTotal/grandtotal)*(1-UCTotal/grandtotal))
+	z2 <- ((6-f2e)^2)/sqrt(f2e*(1-BRTotal/grandtotal)*(1-UCTotal/grandtotal))
+	z3 <- ((7-f3e)^2)/sqrt(f3e*(1-STotal/grandtotal)*(1-UCTotal/grandtotal)) 
+	z4 <- ((7-f4e)^2)/sqrt(f4e*(1-NSTotal/grandtotal)*(1-LCTotal/grandtotal)) 
+	z5 <- ((7-f5e)^2)/sqrt(f5e*(1-BRTotal/grandtotal)*(1-LCTotal/grandtotal))
+	z6 <- ((1-f4e)^2)/sqrt(f6e*(1-STotal/grandtotal)*(1-LCTotal/grandtotal))
+	
 	
 	\begin{table}[h]
 		\centering
@@ -112,9 +152,9 @@
 			& Not Stopped & Bribe requested & Stopped/given warning \\
 			\\[-1.8ex] 
 			\hline \\[-1.8ex]
-			Upper class  &  &  &  \\
+			Upper class & 0.161 & 3.870 & 2.828 \\
 			\\
-			Lower class &  &   &   \\
+			Lower class & 0.161 & 3.870  & 34.649  \\
 			
 		\end{tabular}
 	\end{table}
@@ -122,7 +162,7 @@
 	
 	\vspace{7cm}
 	\item [(d)] How might the standardized residuals help you interpret the results?  
-	
+	Standardized residuals would help us determine potential outliers in the data, such as in LowerClass/Stopped
 \end{enumerate}
 \newpage
 
@@ -142,12 +182,25 @@ Chattopadhyay and Duflo were interested in whether women promote different polic
 \newpage
 \begin{enumerate}
 	\item [(a)] State a null and alternative (two-tailed) hypothesis. 
-	
+	Null hypothesis: presence of female GP leader had no effect on drinking water facilities
+	p = 0
+	Alternative hypothesis: presence of female GP leader had an effect on drinking water facilities
+	p != 0
 	\vspace{6cm}
 	\item [(b)] Run a bivariate regression to test this hypothesis in \texttt{R} (include your code!).
+	#check null hypothesis
+	watertest <- cor.test(water$female, water$water)
+	watertest
+	
+	
+	P value is below .05, we can reject the null hypothesis.
+	
 	
 	\vspace{6cm}
 	\item [(c)] Interpret the coefficient estimate for reservation policy. 
+	
+	Correlation coefficient is positive, meaning that there is on average a positive increase in the amount of repaired water facilities in GP with female leaders- however, as it is a small number, it may not be a very large correlation.
+	
 \end{enumerate}
 
 
