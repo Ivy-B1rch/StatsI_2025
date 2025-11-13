@@ -16,6 +16,8 @@ detachAllPackages <- function() {
 detachAllPackages()
 
 # load libraries
+library(ggplot2)
+
 pkgTest <- function(pkg){
   new.pkg <- pkg[!(pkg %in% installed.packages()[,  "Package"])]
   if (length(new.pkg)) 
@@ -33,3 +35,53 @@ setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 # read in data
 inc.sub <- read.csv("https://raw.githubusercontent.com/ASDS-TCD/StatsI_2025/main/datasets/incumbents_subset.csv")
 
+#part 1, run a regression
+VoteDifReg <- lm(voteshare~difflog, inc.sub)
+
+summary(VoteDifReg)
+
+#part 2 make a scatterplot
+ggplot(inc.sub, aes(x= difflog, y = voteshare)) + 
+  geom_point() + 
+  geom_smooth(method='lm') 
+
+#part 3 get the residuals
+VoteDifResid <- VoteDifReg$residuals
+
+#prediction equation
+
+
+#Question 2
+PresVoteReg <-lm(presvote~difflog, inc.sub)
+summary(PresVoteReg)
+#scatterplot
+
+ggplot(inc.sub, aes(x= presvote, y = difflog)) + 
+  geom_point() + 
+  geom_smooth(method='lm') 
+
+PresVoteResid <- PresVoteReg$residuals
+
+
+
+#question 3
+VotePresReg <- lm(voteshare~presvote, inc.sub)
+summary(VotePresReg)
+#scatterplot
+ggplot(inc.sub, aes(x= presvote, y = voteshare)) + 
+  geom_point() + 
+  geom_smooth(method='lm') 
+
+
+VotePresResid <- VotePresReg$residuals
+
+#part 4
+summary(lm(VoteDifResid~PresVoteResid))
+
+ggplot(inc.sub, aes(x= PresVoteResid, y = VoteDifResid)) + 
+  geom_point() + 
+  geom_smooth(method='lm') 
+
+
+#part 5
+summary(lm(voteshare~difflog+presvote,inc.sub))

@@ -85,8 +85,21 @@
 \noindent We are interested in knowing how the difference in campaign spending between incumbent and challenger affects the incumbent's vote share. 
 	\begin{enumerate}
 		\item Run a regression where the outcome variable is \texttt{voteshare} and the explanatory variable is \texttt{difflog}.	\vspace{5cm}
+		VoteDifReg <- lm(voteshare~difflog, inc.sub)
+		
+		Using the lm function to run a regression for us.
+		
 		\item Make a scatterplot of the two variables and add the regression line. 	\vspace{7cm}
+		
+		ggplot(inc.sub, aes(x= difflog, y = voteshare)) + 
+				geom_point() + 
+				geom_smooth(method='lm') 
+		\includegraphics[width=1.1\textwidth]{../../../../my_answers/PS3-1.png}
+		
+		
 		\item Save the residuals of the model in a separate object.	\vspace{7cm}
+		
+		
 		\item Write the prediction equation.
 	\end{enumerate}
 	

@@ -1,0 +1,248 @@
+of\documentclass[12pt,letterpaper]{article}
+\usepackage{graphicx,textcomp}
+\usepackage{natbib}
+\usepackage{setspace}
+\usepackage{fullpage}
+\usepackage{color}
+\usepackage[reqno]{amsmath}
+\usepackage{amsthm}
+\usepackage{fancyvrb}
+\usepackage{amssymb,enumerate}
+\usepackage[all]{xy}
+\usepackage{endnotes}
+\usepackage{lscape}
+\newtheorem{com}{Comment}
+\usepackage{float}
+\usepackage{hyperref}
+\newtheorem{lem} {Lemma}
+\newtheorem{prop}{Proposition}
+\newtheorem{thm}{Theorem}
+\newtheorem{defn}{Definition}
+\newtheorem{cor}{Corollary}
+\newtheorem{obs}{Observation}
+\usepackage[compact]{titlesec}
+\usepackage{dcolumn}
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\usepackage{multirow}
+\usepackage{xcolor}
+\newcolumntype{.}{D{.}{.}{-1}}
+\newcolumntype{d}[1]{D{.}{.}{#1}}
+\definecolor{light-gray}{gray}{0.65}
+\usepackage{url}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},   
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\footnotesize,
+	breakatwhitespace=false,         
+	breaklines=true,                 
+	captionpos=b,                    
+	keepspaces=true,                 
+	numbers=left,                    
+	numbersep=5pt,                  
+	showspaces=false,                
+	showstringspaces=false,
+	showtabs=false,                  
+	tabsize=2
+}
+\lstset{style=mystyle}
+\newcommand{\Sref}[1]{Section~\ref{#1}}
+\newtheorem{hyp}{Hypothesis}
+
+\title{Problem Set 3}
+\date{Due: November 13, 2025}
+\author{Applied Stats/Quant Methods 1}
+
+
+\begin{document}
+	\maketitle
+	\section*{Instructions}
+	\begin{itemize}
+		\item Please show your work! You may lose points by simply writing in the answer. If the problem requires you to execute commands in \texttt{R}, please include the code you used to get your answers. Please also include the \texttt{.R} file that contains your code. If you are not sure if work needs to be shown for a particular problem, please ask.
+	\item Your homework should be submitted electronically on GitHub.
+	\item This problem set is due before 23:59 on Thursday November 13, 2025. No late assignments will be accepted.
+
+	\end{itemize}
+
+		\vspace{.25cm}
+	
+\noindent In this problem set, you will run several regressions and create an add variable plot (see the lecture slides) in \texttt{R} using the \texttt{incumbents\_subset.csv} dataset. Include all of your code.
+
+	\vspace{.5cm}
+\section*{Question 1}
+\vspace{.25cm}
+\noindent We are interested in knowing how the difference in campaign spending between incumbent and challenger affects the incumbent's vote share. 
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is \texttt{voteshare} and the explanatory variable is \texttt{difflog}.	\vspace{5cm}
+		inc.sub <- read.csv("https://raw.githubusercontent.com/ASDS-TCD/StatsI_2025/main/datasets/incumbents_subset.csv")
+		
+
+		VoteDifReg <- lm(voteshare~difflog, inc.sub)
+		summary(VoteDifReg)
+		Coefficients:
+							Estimate 	Std. Error t value Pr(>|t|)    
+		(Intercept) 0.579031   0.002251  257.19   <2e-16 ***
+		difflog     0.041666   0.000968   43.04   <2e-16 ***
+		
+		
+		Using lm to run the regression of the two variables.
+		
+		\item Make a scatterplot of the two variables and add the regression line. 	\vspace{7cm}
+		
+		ggplot(inc.sub, aes(x= difflog, y = voteshare)) + 
+			geom_point() + 
+			geom_smooth(method='lm')
+		\includegraphics[width=1.1\textwidth]{../../../../my_answers/PS3-1.png}
+		
+		
+		\item Save the residuals of the model in a separate object.	\vspace{7cm}
+		
+		VoteDifResid <- VoteDifReg\$residuals
+		
+		
+		\item Save the residuals of the model in a separate object.	\vspace{7cm}
+		
+		VoteDifResid <- VoteDifReg\$residuals
+		\item Write the prediction equation.
+		
+		y = Beta0 + Beta1*x
+		
+		voteshare = 0.57903 + 0.04167*difflog
+		
+	\end{enumerate}
+	
+\newpage
+
+\section*{Question 2}
+\noindent We are interested in knowing how the difference between incumbent and challenger's spending and the vote share of the presidential candidate of the incumbent's party are related.	\vspace{.25cm}
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is \texttt{presvote} and the explanatory variable is \texttt{difflog}.	\vspace{5cm}
+		PresVoteReg <-lm(presvote~difflog, inc.sub)
+		summary()PresVoteReg)
+		Coefficients:
+							Estimate 	Std. Error t value 	Pr(>|t|)    
+		(Intercept) 0.507583   0.003161  160.60   <2e-16 ***
+		difflog     0.023837   0.001359   17.54   <2e-16 ***
+		
+		Using lm to run the regression of the two variables.
+		
+		\item Make a scatterplot of the two variables and add the regression line. 	\vspace{5cm}
+		ggplot(inc.sub, aes(x= difflog, y = presvote)) + 
+			geom_point() + 
+			geom_smooth(method='lm')
+		
+		\includegraphics[width=1.1\textwidth]{../../../../my_answers/PS3-2.png}
+		
+		\item Save the residuals of the model in a separate object.	\vspace{5cm}
+		PresVoteResid <- PresVoteReg\$residuals
+
+		
+		\item Write the prediction equation.
+		
+		y = Beta0 + Beta1*x
+		presvote = 0.50758 + 0.02384*difflog
+	\end{enumerate}
+	
+	\newpage	
+\section*{Question 3}
+
+\noindent We are interested in knowing how the vote share of the presidential candidate of the incumbent's party is associated with the incumbent's electoral success.
+	\vspace{.25cm}
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is \texttt{voteshare} and the explanatory variable is \texttt{presvote}.
+		VotePresReg <- lm(voteshare~presvote, inc.sub)
+		summary(VotePresReg)
+		Coefficients:
+							Estimate 	Std. Error	 t value Pr(>|t|)    
+		(Intercept) 0.441330   0.007599   58.08   <2e-16 ***
+		presvote    0.388018   0.013493   28.76   <2e-16 ***
+		
+		
+		
+			\vspace{5cm}
+		\item Make a scatterplot of the two variables and add the regression line. 
+
+		ggplot(inc.sub, aes(x= presvote, y = voteshare)) + 
+			geom_point() + 
+			geom_smooth(method='lm')
+		
+		\includegraphics[width=1.1\textwidth]{../../../../my_answers/PS3-3.png}
+		
+			\vspace{5cm}
+		\item Write the prediction equation.
+		
+				y = Beta0 + Beta1*x
+				voteshare =  0.4413 + presvote*0.3880
+	\end{enumerate}
+	
+
+\newpage	
+\section*{Question 4}
+\noindent The residuals from part (a) tell us how much of the variation in \texttt{voteshare} is $not$ explained by the difference in spending between incumbent and challenger. The residuals in part (b) tell us how much of the variation in \texttt{presvote} is $not$ explained by the difference in spending between incumbent and challenger in the district.
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is the residuals from Question 1 and the explanatory variable is the residuals from Question 2.	\vspace{6cm}
+		summarylm((VoteDifResid~PresVoteResid))
+		
+		Residuals:
+		Min       1Q   Median       3Q      Max 
+		-0.25928 -0.04737 -0.00121  0.04618  0.33126 
+		Coefficients:
+								Estimate 	Std. Error 		t value Pr(>|t|)    
+		(Intercept)   -5.934e-18  1.299e-03    0.00        1    
+		PresVoteResid  2.569e-01  1.176e-02   21.84   <2e-16 ***
+		
+		Running on its own rather than displaying, since there is no need for it later.
+		
+		\item Make a scatterplot of the two residuals and add the regression line. 	\vspace{6cm}
+		ggplot(inc.sub, aes(x= PresVoteResid, y = VoteDifResid)) + 
+			geom_point() + 
+			geom_smooth(method='lm') 
+		\includegraphics[width=1.1\textwidth]{../../../../my_answers/PS3-4.png}
+		\item Write the prediction equation.
+		y = Beta0 + Beta1*x
+		residual1 = -5.934e-18 +2.569e-01*residual2
+	\end{enumerate}
+	
+	\newpage	
+
+\section*{Question 5}
+\noindent What if the incumbent's vote share is affected by both the president's popularity and the difference in spending between incumbent and challenger? 
+	\begin{enumerate}
+		\item Run a regression where the outcome variable is the incumbent's \texttt{voteshare} and the explanatory variables are \texttt{difflog} and \texttt{presvote}.	\vspace{5cm}
+		summary(lm(voteshare~difflog+presvote,inc.sub))
+		
+		Residuals:
+		Min       1Q   Median       3Q      Max 
+		-0.25928 -0.04737 -0.00121  0.04618  0.33126 
+		Coefficients:
+							Estimate 		Std. Error 	t value Pr(>|t|)    
+		(Intercept) 0.4486442  0.0063297   70.88   <2e-16 ***
+		difflog     0.0355431  0.0009455   37.59   <2e-16 ***
+		presvote    0.2568770  0.0117637   21.84   <2e-16 ***
+		
+		\item Write the prediction equation.	\vspace{5cm}
+		y = beta0 + beta1*x1 + beta2*x2
+		
+		voteshare = 0.44864 + 0.03554*difflog + 0.25688*presvote
+		
+		\item What is it in this output that is identical to the output in Question 4? Why do you think this is the case?
+		
+		The residuals are identical in both Question 4 and Question 5. This may be true because Question 4 was created using Residuals from two problems that both used some combination of voteshare, difflog, and presvote, while Question 5 uses all three of those variables.
+		
+	\end{enumerate}
+
+
+
+
+\end{document}
