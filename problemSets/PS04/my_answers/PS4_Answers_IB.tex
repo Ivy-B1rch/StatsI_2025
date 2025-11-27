@@ -93,40 +93,67 @@ help(Prestige)
 
 \noindent We would like to study whether individuals with higher levels of income have more prestigious jobs. Moreover, we would like to study whether professionals have more prestigious jobs than blue and white collar workers.
 
+
 \newpage
 \begin{enumerate}
 	
 	\item [(a)]
 	Create a new variable \texttt{professional} by recoding the variable \texttt{type} so that professionals are coded as $1$, and blue and white collar workers are coded as $0$ (Hint: \texttt{ifelse}).
 	
+	Using some techniques learned in Computer Science for recoding in a cleaner fashion than using an ifelse.
+	\lstinputlisting[language=R, firstline=48, lastline=59]{PS04_Answers_IB.R}
+		
 	\vspace{6cm}
 	
 	
 	\item [(b)]
 	Run a linear model with \texttt{prestige} as an outcome and \texttt{income}, \texttt{professional}, and the interaction of the two as predictors (Note: this is a continuous $\times$ dummy interaction.)
 	
+		\lstinputlisting[language=R, firstline=54, lastline=56]{PS04_Answers_IB.R}
+		
+		Multiply the dummy by the continious to create the interaction, and add it to the equation as a whole.
+	
 	\vspace{6cm}
 	\item [(c)]
 	Write the prediction equation based on the result.
+	
+	prestige = 21.1422589 + 0.0031709*income + 37.7812800*professional + income*professional*0.0023257
 	
 \newpage
 	\item [(d)]
 	Interpret the coefficient for \texttt{income}.
 	
+	While professional is held at zero (in other words, if the job is blue or white collar), prestige score on average rises by an 0.0031709 for every dollar of income the worker makes.
+	
 	\vspace{10cm}	
 	\item [(e)]
 	Interpret the coefficient for \texttt{professional}.
+	While income is held at zero, a worker's prestige score rises by on average 37.7812800 if the variable is 1- in other words, if they are a professional and not a blue or white collar worker.
 	
 	\newpage
 	\item [(f)]
 	What is the effect of a \$1,000 increase in income on prestige score for professional occupations? In other words, we are interested in the marginal effect of income when the variable \texttt{professional} takes the value of $1$. Calculate the change in $\hat{y}$ associated with a \$1,000 increase in income based on your answer for (c).
 	
+	Plugging the numbers into the equation looks like:
+		
+		
+		(0.0031709*1,000 + 37.7812800*1 + 1,000*1*0.0023257)-(0.0031709*0 + 37.7812800*1 + 0*1*0.0023257)
+		
+		We subtract the version of the equation where income is at 0 but professional status is 1, from one where income is at 1,000 and professional status is 1.
+		We do not include the intercept because it would be subtracted out anyway. 
+		Using R to calculate, the answer is 5.4966
+		
 	\vspace{10cm}
 	
 	
 	\item [(g)]
 	What is the effect of changing one's occupations from non-professional to professional when her income is \$6,000? We are interested in the marginal effect of professional jobs when the variable \texttt{income} takes the value of $6,000$. Calculate the change in $\hat{y}$ based on your answer for (c).
 	
+			(0.0031709*6000 + 37.7812800*1 + 6000*1*0.0023257)-(0.0031709*6000 + 37.7812800*0 + 6000*0*0.0023257)
+
+			We subtract the version of the equation where income is at 6,000 but professional status is 0, from one where income is at 6,000 but professional status is 1.
+			We do not include the intercept because it would be equal on both sides and subtracted out anyway.
+			Using R to calculate, the answer is 51.73548.
 	
 \end{enumerate}
 
@@ -162,16 +189,69 @@ a precinct that was adjacent to a precinct in the treatment group (since people 
 \begin{enumerate}
 	\item [(a)] Use the results from a linear regression to determine whether having these yard signs in a precinct affects vote share (e.g., conduct a hypothesis test with $\alpha = .05$).
 	
+	Step 1: Assumptions about our Data
+	Sample size is 131, we're assuming precincts are genuinely assigned randomly. The linear regression was set up with a continious and a dummy variable.
+	
+	Step 2: Null and Alternative Hypothesis
+	Null Hypothesis: Having yard signs assigned affects a precinct's voter share. 
+	Alternative Hypothesis:  Having yard signs assigned does not affect a precinct's voter share.
+		
+	Step 3: Calculate a Test Statistic
+	Using a T test, because we're only testing to see if one regression coefficent = 0.
+	
+	
+	\lstinputlisting[language=R, firstline=65, lastline=66]{PS04_Answers_IB.R}
+	
+	According to R, our test statistic is 2.625
+	
+	Step 4: Calculate a P value
+	n is 130, and k is 2.
+	
+	\lstinputlisting[language=R, firstline=69, lastline=70]{PS04_Answers_IB.R}
+	
+	P value is 0.00972002.
+	
+	Step 5: Conclusion
+	0.00972002 is less then .95, so we can reject the null hypothesis. Having yard signs assigned affects a precinct's vote share.
+	
 	\newpage		
 	\item [(b)]  Use the results to determine whether being
 	next to precincts with these yard signs affects vote
 	share (e.g., conduct a hypothesis test with $\alpha = .05$).
+	Step 1: Assumptions
+	Same assumptions as a).
+	
+	Step 2: Null and Alternative Hypothesis
+	Null Hypothesis: Having yard signs adjacent affects a precinct's voter share. 
+	Alternative Hypothesis:  Having yard signs adjacent does not affect a precinct's voter share.
+	
+	
+	Step 3: Calculate a Test Statistic
+	Using a T test, because we're only testing to see if one regression coefficent = 0.
+	
+	
+	\lstinputlisting[language=R, firstline=75, lastline=76]{PS04_Answers_IB.R}
+	
+	According to R, our test statistic is 3.230769.
+	
+	Step 4: Calculate a P value
+	n is 130, and k is 2.
+	
+	\lstinputlisting[language=R, firstline=78, lastline=79]{PS04_Answers_IB.R}
+	
+	P value is 0.00156946.
+	
+	Step 5: Conclusion
+	0.00156946 is less then .95, so we can reject the null hypothesis. Having yard signs adjacent affects a precinct's vote share.
+	
 	
 	\vspace{7cm}
 	\item [(c)] Interpret the coefficient for the constant term substantively.
 	\vspace{7cm}
+	0.302, the constant, is the estimated average voteshare of Mr. Cuccinelli assuming that no signs of any kind have been placed, with an standard deviation of 0.011.
 	
 	\item [(d)] Evaluate the model fit for this regression.  What does this	tell us about the importance of yard signs versus other factors that are not modeled?
+	R^2 is extremely low, which suggests that the model is very poorly fitted. This suggests that yard signs are not a very important factor compared to other factors that are modeled. 
 	
 \end{enumerate}  
 
